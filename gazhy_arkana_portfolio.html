@@ -8,10 +8,10 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome Icons CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Inter & JetBrains Mono Fonts -->
+    <!-- Inter & Poppins Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
 
     <script>
         tailwind.config = {
@@ -19,15 +19,13 @@
                 extend: {
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'monospace'],
+                        display: ['Poppins', 'sans-serif'],
                     },
                     colors: {
-                        accent: {
-                            50: '#eep2ff',
-                            400: '#818cf8',
-                            500: '#6366f1',
-                            600: '#4f46e5',
-                            700: '#4338ca',
+                        navy: {
+                            950: '#0a0a0f',
+                            900: '#131320',
+                            800: '#1c1c2e',
                         }
                     }
                 }
@@ -39,788 +37,838 @@
             width: 8px;
         }
         ::-webkit-scrollbar-track {
-            background: #09090b;
+            background: #0a0a0f;
         }
         ::-webkit-scrollbar-thumb {
-            background: #27272a;
+            background: #26263a;
             border-radius: 4px;
         }
         ::-webkit-scrollbar-thumb:hover {
-            background: #3f3f46;
+            background: #34344e;
         }
-        
+
+        /* Hero + section panels share the same gradient DNA */
+        .hero-gradient {
+            background: linear-gradient(160deg, #38bdf8 0%, #4f46e5 38%, #312e81 68%, #1e1b4b 88%, #0a0a0f 100%);
+        }
+
+        .section-panel {
+            background:
+                radial-gradient(ellipse 60% 45% at 15% 0%, rgba(79, 70, 229, 0.12), transparent 70%),
+                radial-gradient(ellipse 55% 40% at 90% 10%, rgba(56, 189, 248, 0.07), transparent 70%),
+                linear-gradient(180deg, #131320 0%, #15152a 34%, #0c0c14 100%);
+        }
+
+        /* Hairline gradient on top of every card - echoes the hero's top edge */
+        .grad-line-top {
+            position: relative;
+        }
+        .grad-line-top::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 1.5rem;
+            right: 1.5rem;
+            height: 1px;
+            background: linear-gradient(90deg, rgba(125, 211, 252, 0.55), rgba(99, 102, 241, 0.35), transparent 85%);
+            border-radius: 999px;
+            pointer-events: none;
+        }
+
+        /* Gradient text - echoes hero gradient */
+        .grad-text {
+            background: linear-gradient(95deg, #7dd3fc 10%, #818cf8 60%, #a5b4fc 95%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+
         .glass-panel {
-            background: rgba(24, 24, 27, 0.75);
+            background: rgba(10, 10, 15, 0.75);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .num-item {
+            font-family: 'Poppins', sans-serif;
         }
     </style>
 </head>
-<body class="bg-zinc-950 text-zinc-100 font-sans antialiased selection:bg-indigo-500 selection:text-white min-h-screen flex flex-col">
+<body class="bg-navy-950 text-stone-100 font-sans antialiased selection:bg-indigo-600 selection:text-white min-h-screen flex flex-col">
 
     <!-- Toast Notification Container -->
     <div id="toast-container" class="fixed bottom-6 right-6 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
     <!-- ========================================== -->
-    <!-- 1. STICKY NAVBAR HEADER                    -->
+    <!-- 1. STICKY NAVBAR (moves with scroll)       -->
     <!-- ========================================== -->
-    <header class="sticky top-0 z-40 w-full glass-panel border-b border-zinc-800/80 transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-            
-            <!-- Brand Logo -->
+    <header class="sticky top-0 z-40 w-full glass-panel">
+        <div class="max-w-[1440px] mx-auto px-5 sm:px-8 h-16 flex items-center justify-between gap-4">
+            <!-- Brand -->
             <a href="#hero" class="flex items-center space-x-3 group">
-                <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-600 via-indigo-500 to-sky-400 p-[1px] transition-transform duration-300 group-hover:scale-105 shadow-lg shadow-indigo-500/20">
-                    <div class="w-full h-full bg-zinc-950 rounded-[11px] flex items-center justify-center font-mono font-bold text-lg text-white">
-                        GA<span class="text-indigo-400">.</span>
-                    </div>
+                <div class="w-9 h-9 rounded-xl bg-white flex items-center justify-center font-display font-bold text-lg text-indigo-600 shadow-lg">
+                    GA<span class="text-zinc-900 text-xs">.</span>
                 </div>
-                <div class="flex flex-col">
-                    <span class="font-bold tracking-tight text-white group-hover:text-indigo-400 transition-colors">Gazhy Arkana</span>
-                    <span class="text-[10px] text-zinc-400 font-mono tracking-wider uppercase">Software Engineering</span>
-                </div>
+                <span class="font-display font-bold tracking-tight text-white text-base sm:text-lg">Gazhy Arkana</span>
             </a>
 
             <!-- Desktop Nav Links -->
-            <nav class="hidden md:flex items-center space-x-1 bg-zinc-900/60 p-1 rounded-full border border-zinc-800">
-                <a href="#hero" class="px-4 py-1.5 text-xs font-medium text-zinc-300 hover:text-white hover:bg-zinc-800/80 rounded-full transition-all">Utama</a>
-                <a href="#about" class="px-4 py-1.5 text-xs font-medium text-zinc-300 hover:text-white hover:bg-zinc-800/80 rounded-full transition-all">About</a>
-                <a href="#experience" class="px-4 py-1.5 text-xs font-medium text-zinc-300 hover:text-white hover:bg-zinc-800/80 rounded-full transition-all">Experience</a>
-                <a href="#education" class="px-4 py-1.5 text-xs font-medium text-zinc-300 hover:text-white hover:bg-zinc-800/80 rounded-full transition-all">Education</a>
-                <a href="#projects" class="px-4 py-1.5 text-xs font-medium text-zinc-300 hover:text-white hover:bg-zinc-800/80 rounded-full transition-all">Projects</a>
-                <a href="#achievements" class="px-4 py-1.5 text-xs font-medium text-zinc-300 hover:text-white hover:bg-zinc-800/80 rounded-full transition-all">Prestasi</a>
-                <a href="#skills" class="px-4 py-1.5 text-xs font-medium text-zinc-300 hover:text-white hover:bg-zinc-800/80 rounded-full transition-all">Skills</a>
-                <a href="#contact" class="px-4 py-1.5 text-xs font-medium text-zinc-300 hover:text-white hover:bg-zinc-800/80 rounded-full transition-all">Contact</a>
-            </nav>
-
-            <!-- CTA Right & LinkedIn Direct -->
-            <div class="flex items-center space-x-3">
-                <a href="https://www.linkedin.com/in/gazhy-arkana-028a50312/" target="_blank" rel="noopener" class="hidden sm:inline-flex items-center space-x-2 text-xs font-semibold px-4 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white shadow-md shadow-sky-600/20 transition-all">
-                    <i class="fa-brands fa-linkedin"></i>
-                    <span>LinkedIn Connect</span>
-                </a>
-
-                <!-- Mobile Menu Button -->
-                <button id="mobile-menu-btn" aria-label="Toggle navigation menu" class="md:hidden p-2 rounded-lg bg-zinc-900 border border-zinc-800 text-zinc-300 hover:text-white focus:outline-none">
-                    <i class="fa-solid fa-bars text-lg" id="menu-icon"></i>
-                </button>
+            <div class="hidden lg:flex items-center gap-1">
+                <a href="#hero" class="px-3 py-1.5 text-xs font-medium text-stone-300 hover:text-white hover:bg-white/5 rounded-full transition-all">Utama</a>
+                <a href="#about" class="px-3 py-1.5 text-xs font-medium text-stone-300 hover:text-white hover:bg-white/5 rounded-full transition-all">About</a>
+                <a href="#experience" class="px-3 py-1.5 text-xs font-medium text-stone-300 hover:text-white hover:bg-white/5 rounded-full transition-all">Experience</a>
+                <a href="#education" class="px-3 py-1.5 text-xs font-medium text-stone-300 hover:text-white hover:bg-white/5 rounded-full transition-all">Education</a>
+                <a href="#projects" class="px-3 py-1.5 text-xs font-medium text-stone-300 hover:text-white hover:bg-white/5 rounded-full transition-all">Projects</a>
+                <a href="#achievements" class="px-3 py-1.5 text-xs font-medium text-stone-300 hover:text-white hover:bg-white/5 rounded-full transition-all">Prestasi</a>
+                <a href="#skills" class="px-3 py-1.5 text-xs font-medium text-stone-300 hover:text-white hover:bg-white/5 rounded-full transition-all">Skills</a>
+                <a href="#contact" class="px-3 py-1.5 text-xs font-medium text-stone-300 hover:text-white hover:bg-white/5 rounded-full transition-all">Contact</a>
             </div>
+
+            <!-- CTA (Get in touch pill) -->
+            <a href="#contact" class="hidden md:inline-flex items-center gap-2 bg-white text-zinc-900 rounded-full pl-5 pr-1.5 py-1.5 text-xs sm:text-sm font-semibold shadow-lg hover:scale-105 transition-transform">
+                Get in touch
+                <span class="w-7 h-7 rounded-full bg-indigo-600 flex items-center justify-center text-white">
+                    <i class="fa-solid fa-arrow-right text-xs"></i>
+                </span>
+            </a>
+
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-btn" aria-label="Toggle navigation menu" class="lg:hidden p-2 rounded-lg bg-white/10 border border-white/10 text-white focus:outline-none">
+                <i class="fa-solid fa-bars text-lg" id="menu-icon"></i>
+            </button>
         </div>
 
-        <!-- Mobile Navigation Drawer -->
-        <div id="mobile-menu" class="hidden md:hidden border-b border-zinc-800 bg-zinc-950/95 px-4 pt-3 pb-6 space-y-3">
-            <a href="#hero" class="mobile-nav-link block px-3 py-2 rounded-lg text-sm font-medium text-zinc-300 hover:bg-zinc-900 hover:text-white">Utama</a>
-            <a href="#about" class="mobile-nav-link block px-3 py-2 rounded-lg text-sm font-medium text-zinc-300 hover:bg-zinc-900 hover:text-white">About</a>
-            <a href="#experience" class="mobile-nav-link block px-3 py-2 rounded-lg text-sm font-medium text-zinc-300 hover:bg-zinc-900 hover:text-white">Experience</a>
-            <a href="#education" class="mobile-nav-link block px-3 py-2 rounded-lg text-sm font-medium text-zinc-300 hover:bg-zinc-900 hover:text-white">Education</a>
-            <a href="#projects" class="mobile-nav-link block px-3 py-2 rounded-lg text-sm font-medium text-zinc-300 hover:bg-zinc-900 hover:text-white">Projects</a>
-            <a href="#achievements" class="mobile-nav-link block px-3 py-2 rounded-lg text-sm font-medium text-zinc-300 hover:bg-zinc-900 hover:text-white">Prestasi</a>
-            <a href="#skills" class="mobile-nav-link block px-3 py-2 rounded-lg text-sm font-medium text-zinc-300 hover:bg-zinc-900 hover:text-white">Skills</a>
-            <a href="#contact" class="mobile-nav-link block px-3 py-2 rounded-lg text-sm font-medium text-zinc-300 hover:bg-zinc-900 hover:text-white">Contact</a>
+        <!-- Mobile Nav Drawer (fixed, works from anywhere) -->
+        <div id="mobile-menu" class="hidden fixed top-4 left-2 right-2 z-40 lg:hidden rounded-3xl bg-navy-900/95 backdrop-blur-xl border border-indigo-900/50 px-4 pt-3 pb-6 space-y-1 shadow-2xl">
+            <div class="flex items-center justify-between pb-2 mb-1 border-b border-indigo-900/40">
+                <span class="font-display font-bold text-indigo-400 text-sm">GA<span class="text-white">.</span></span>
+                <button onclick="toggleMobileMenu()" class="p-1.5 text-stone-400 hover:text-white"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <a href="#hero" class="mobile-nav-link block px-3 py-2 rounded-lg text-sm font-medium text-stone-300 hover:bg-indigo-950/60 hover:text-white">Utama</a>
+            <a href="#about" class="mobile-nav-link block px-3 py-2 rounded-lg text-sm font-medium text-stone-300 hover:bg-indigo-950/60 hover:text-white">About</a>
+            <a href="#experience" class="mobile-nav-link block px-3 py-2 rounded-lg text-sm font-medium text-stone-300 hover:bg-indigo-950/60 hover:text-white">Experience</a>
+            <a href="#education" class="mobile-nav-link block px-3 py-2 rounded-lg text-sm font-medium text-stone-300 hover:bg-indigo-950/60 hover:text-white">Education</a>
+            <a href="#projects" class="mobile-nav-link block px-3 py-2 rounded-lg text-sm font-medium text-stone-300 hover:bg-indigo-950/60 hover:text-white">Projects</a>
+            <a href="#achievements" class="mobile-nav-link block px-3 py-2 rounded-lg text-sm font-medium text-stone-300 hover:bg-indigo-950/60 hover:text-white">Prestasi</a>
+            <a href="#skills" class="mobile-nav-link block px-3 py-2 rounded-lg text-sm font-medium text-stone-300 hover:bg-indigo-950/60 hover:text-white">Skills</a>
+            <a href="#contact" class="mobile-nav-link block px-3 py-2 rounded-lg text-sm font-medium text-stone-300 hover:bg-indigo-950/60 hover:text-white">Contact</a>
             <div class="pt-2">
-                <a href="https://www.linkedin.com/in/gazhy-arkana-028a50312/" target="_blank" rel="noopener" class="mobile-nav-link w-full text-center block text-xs font-semibold px-4 py-2.5 rounded-xl bg-sky-600 text-white">
-                    <i class="fa-brands fa-linkedin mr-1"></i> LinkedIn Connect
+                <a href="https://www.linkedin.com/in/gazhy-arkana-028a50312/" target="_blank" rel="noopener" class="mobile-nav-link w-full text-center flex items-center justify-center gap-2 text-xs font-semibold px-4 py-2.5 rounded-full bg-indigo-600 text-white">
+                    <i class="fa-brands fa-linkedin"></i> LinkedIn Connect
                 </a>
             </div>
         </div>
     </header>
 
     <main class="flex-grow">
-        <!-- ========================================== -->
-        <!-- 2. HERO SECTION                            -->
-        <!-- ========================================== -->
-        <section id="hero" class="relative py-16 lg:py-24 overflow-hidden border-b border-zinc-900">
-            <!-- Background Glow Orbs -->
-            <div class="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-indigo-600/10 rounded-full blur-[120px] pointer-events-none"></div>
-            <div class="absolute top-1/3 right-10 w-[300px] h-[300px] bg-sky-500/10 rounded-full blur-[100px] pointer-events-none"></div>
+        <div class="p-2 sm:p-4 max-w-[1440px] mx-auto w-full">
 
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-8 items-center">
-                    
-                    <!-- Left Column: Content & CTAs -->
-                    <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
-                        
+            <!-- ========================================== -->
+            <!-- 2. HERO PANEL (BIG GRADIENT CARD)          -->
+            <!-- ========================================== -->
+            <section id="hero" class="relative rounded-[2rem] sm:rounded-[2.5rem] overflow-hidden hero-gradient">
+
+                <!-- PHOTO: clearly visible, no text over the face -->
+                <div class="absolute inset-y-0 right-0 w-[50%] lg:w-[42%] pointer-events-none">
+                    <img id="profile-img"
+                         src="FOTODIRI.png"
+                         alt="Gazhy Arkana Pramudito"
+                         class="w-full h-full object-cover object-top"
+                         onerror="this.onerror=null; this.src='https://placehold.co/700x900/312e81/a5b4fc?text=Gazhy+Arkana';">
+                    <!-- soft edge blends only (left & bottom), face stays clear -->
+                    <div class="absolute inset-0 bg-gradient-to-r from-[#4f46e5]/70 via-transparent to-transparent"></div>
+                    <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0f]/80 via-transparent to-transparent"></div>
+                </div>
+
+                <!-- HERO CONTENT -->
+                <div class="relative z-10 max-w-7xl mx-auto px-5 sm:px-8 pt-12 sm:pt-20 pb-8 sm:pb-12">
+                    <div class="max-w-2xl">
+                        <p class="font-display font-medium text-white/90 text-base sm:text-lg mb-2">Hey, I'm a</p>
+                        <h1 class="font-display font-bold tracking-tight text-white leading-[0.95] text-5xl sm:text-7xl lg:text-8xl">
+                            Web<br>Developer
+                        </h1>
+                        <p class="font-display text-sky-200/90 text-sm sm:text-base mt-4">
+                            Gazhy Arkana Pramudito &mdash; Software Engineering Student, SMKN 20 Jakarta
+                        </p>
+
                         <!-- Status Badge -->
-                        <div class="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-indigo-950/60 border border-indigo-800/50 text-indigo-300 text-xs font-mono">
+                        <div class="mt-6 inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-white/10 border border-white/20 text-indigo-100 text-xs font-medium">
                             <span class="relative flex h-2 w-2">
-                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                                <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-300 opacity-75"></span>
+                                <span class="relative inline-flex rounded-full h-2 w-2 bg-emerald-300"></span>
                             </span>
                             <span>SMKN 20 Jakarta - Rekayasa Perangkat Lunak</span>
                         </div>
 
-                        <!-- Main Headline -->
-                        <div class="space-y-2">
-                            <h1 class="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white leading-tight">
-                                Hi, I'm Gazhy Arkana <br>
-                                <span class="bg-gradient-to-r from-indigo-400 via-sky-300 to-indigo-200 bg-clip-text text-transparent">Pramudito</span>
-                            </h1>
-                            <p class="text-base sm:text-lg font-medium text-sky-400 font-mono">
-                                Web Developer &amp; Software Engineering Student at SMKN 20 Jakarta
-                            </p>
-                        </div>
-
-                        <!-- Bio Description -->
-                        <p class="text-sm sm:text-base text-zinc-400 leading-relaxed max-w-2xl mx-auto lg:mx-0">
-                            Specializing in <span class="text-zinc-200 font-semibold">PHP 8.3, Laravel 12, REST API design, MySQL, PostgreSQL</span>, and <span class="text-zinc-200 font-semibold">Tailwind CSS</span>. Experienced in building robust web applications and backend architectures.
-                        </p>
-
                         <!-- Action Buttons -->
-                        <div class="flex flex-wrap items-center justify-center lg:justify-start gap-3 pt-2">
-                            <a href="#projects" class="px-6 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-semibold text-sm shadow-lg shadow-indigo-600/30 transition-all hover:translate-y-[-2px] flex items-center space-x-2">
+                        <div class="mt-7 flex flex-wrap items-center gap-3">
+                            <a href="#projects" class="inline-flex items-center space-x-2 px-6 py-2.5 rounded-full bg-white text-zinc-900 font-semibold text-sm shadow-lg hover:scale-105 transition-transform">
                                 <span>View Projects</span>
-                                <i class="fa-solid fa-arrow-down text-xs"></i>
+                                <span class="w-6 h-6 rounded-full bg-indigo-600 flex items-center justify-center text-white">
+                                    <i class="fa-solid fa-arrow-down text-[10px]"></i>
+                                </span>
                             </a>
-
-                            <a href="https://www.linkedin.com/in/gazhy-arkana-028a50312/" target="_blank" rel="noopener" class="px-5 py-3 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-semibold text-sm shadow-lg shadow-sky-600/20 transition-all flex items-center space-x-2">
+                            <a href="https://www.linkedin.com/in/gazhy-arkana-028a50312/" target="_blank" rel="noopener" class="inline-flex items-center space-x-2 px-5 py-2.5 rounded-full bg-black/30 border border-white/25 text-white font-semibold text-sm hover:bg-black/40 transition-all">
                                 <i class="fa-brands fa-linkedin"></i>
-                                <span>Connect on LinkedIn</span>
+                                <span>LinkedIn</span>
                             </a>
-
-                            <button onclick="copyToClipboard('gazhy.arkana.pramudito@gmail.com', 'Email disalin!')" class="px-5 py-3 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-zinc-800 font-medium text-sm transition-all flex items-center space-x-2 group">
-                                <i class="fa-regular fa-copy text-indigo-400 group-hover:scale-110 transition-transform"></i>
+                            <button onclick="copyToClipboard('gazhy.arkana.pramudito@gmail.com', 'Email disalin!')" class="inline-flex items-center space-x-2 px-5 py-2.5 rounded-full bg-black/30 border border-white/25 text-white font-medium text-sm hover:bg-black/40 transition-all">
+                                <i class="fa-regular fa-copy text-sky-300"></i>
                                 <span>Salin Email</span>
                             </button>
                         </div>
 
-                        <!-- Social Links -->
-                        <div class="pt-4 flex items-center justify-center lg:justify-start space-x-4 border-t border-zinc-900">
-                            <span class="text-xs font-mono text-zinc-400 uppercase tracking-wider">Koneksi Profesional:</span>
-                            <a href="https://www.linkedin.com/in/gazhy-arkana-028a50312/" target="_blank" rel="noopener" class="w-9 h-9 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-sky-400 hover:text-white hover:bg-sky-600 hover:border-sky-500 transition-all" title="LinkedIn Profile">
-                                <i class="fa-brands fa-linkedin-in text-base"></i>
-                            </a>
-                            <a href="https://github.com/XWAYLAND" target="_blank" rel="noopener" class="w-9 h-9 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800 hover:border-zinc-700 transition-all" title="GitHub Profile">
-                                <i class="fa-brands fa-github text-base"></i>
-                            </a>
-                            <a href="mailto:gazhy.arkana.pramudito@gmail.com" class="w-9 h-9 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-400 hover:text-white hover:bg-zinc-800 hover:border-zinc-700 transition-all" title="Kirim Email">
-                                <i class="fa-regular fa-envelope text-base"></i>
-                            </a>
+                        <button onclick="promptChangeProfilePic()" class="mt-4 text-[11px] text-indigo-200/70 hover:text-white transition-colors flex items-center space-x-1">
+                            <i class="fa-solid fa-image"></i>
+                            <span>Uji Foto URL</span>
+                        </button>
+                    </div>
+
+                    <!-- Numbered capabilities row -->
+                    <div id="skills" class="relative z-10 grid grid-cols-2 md:grid-cols-4 gap-6 mt-16 sm:mt-24">
+                        <div>
+                            <span class="text-xs font-mono text-sky-200/80">[#01]</span>
+                            <p class="num-item font-semibold text-white text-sm mt-1">Backend Development<br><span class="text-white/60 text-xs font-normal">Laravel 12 &bull; PHP 8.3</span></p>
+                        </div>
+                        <div>
+                            <span class="text-xs font-mono text-sky-200/80">[#02]</span>
+                            <p class="num-item font-semibold text-white text-sm mt-1">REST API Design<br><span class="text-white/60 text-xs font-normal">Architecture &amp; Integration</span></p>
+                        </div>
+                        <div>
+                            <span class="text-xs font-mono text-sky-200/80">[#03]</span>
+                            <p class="num-item font-semibold text-white text-sm mt-1">Database Engineering<br><span class="text-white/60 text-xs font-normal">MySQL &bull; PostgreSQL</span></p>
+                        </div>
+                        <div>
+                            <span class="text-xs font-mono text-sky-200/80">[#04]</span>
+                            <p class="num-item font-semibold text-white text-sm mt-1">Frontend Interface<br><span class="text-white/60 text-xs font-normal">Tailwind CSS &bull; JavaScript</span></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TECH STRIP -->
+            <div class="mt-2 sm:mt-3 rounded-[2rem] sm:rounded-[2.5rem] section-panel border border-white/5 px-6 sm:px-10 py-8 relative overflow-hidden">
+                <div class="grad-line-top"></div>
+                <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center gap-8">
+                    <p class="text-xs font-mono text-stone-400 leading-relaxed md:w-44 shrink-0">
+                        Ditenagai oleh teknologi yang saya kuasai
+                    </p>
+                    <div class="flex flex-wrap items-center gap-x-10 gap-y-5">
+                        <span class="flex items-center gap-2 text-sm font-semibold text-stone-200"><i class="fa-brands fa-laravel text-xl text-sky-300/70"></i>Laravel 12</span>
+                        <span class="flex items-center gap-2 text-sm font-semibold text-stone-200"><i class="fa-brands fa-php text-xl text-indigo-300/70"></i>PHP 8.3</span>
+                        <span class="flex items-center gap-2 text-sm font-semibold text-stone-200"><i class="fa-solid fa-database text-lg text-sky-300/70"></i>MySQL</span>
+                        <span class="flex items-center gap-2 text-sm font-semibold text-stone-200"><i class="fa-solid fa-server text-lg text-indigo-300/70"></i>PostgreSQL</span>
+                        <span class="flex items-center gap-2 text-sm font-semibold text-stone-200"><i class="fa-solid fa-wind text-lg text-sky-300/70"></i>Tailwind CSS</span>
+                        <span class="flex items-center gap-2 text-sm font-semibold text-stone-200"><i class="fa-brands fa-git-alt text-xl text-indigo-300/70"></i>Git &amp; GitHub</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ========================================== -->
+            <!-- 3. ABOUT & EXPERIENCE & EDUCATION PANEL    -->
+            <!-- ========================================== -->
+            <section id="about" class="mt-2 sm:mt-3 rounded-[2rem] sm:rounded-[2.5rem] section-panel border border-white/5 py-14 sm:py-20 relative overflow-hidden">
+                <div class="max-w-7xl mx-auto px-5 sm:px-8">
+
+                    <!-- Section intro: "Behind the Code" -->
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 pb-12 mb-2 border-b border-white/5 items-center relative">
+                        <div class="grad-line-top"></div>
+                        <div class="lg:col-span-6">
+                            <span class="text-xs font-mono text-sky-200/80">[#05]</span>
+                            <p class="font-display font-semibold text-sky-400 text-lg mt-1">Behind the Code</p>
+                            <h2 class="font-display font-bold text-white tracking-tight leading-[1.05] text-4xl sm:text-5xl mt-3">
+                                Building Solutions
+                                That Solve <span class="grad-text">Real Problems.</span>
+                            </h2>
+                            <p class="text-xs sm:text-sm text-stone-400 mt-6 max-w-md leading-relaxed">
+                                Great code should feel invisible &mdash; saya membangun aplikasi web yang kokoh, cepat, dan nyaman digunakan.
+                            </p>
+                        </div>
+                        <div class="lg:col-span-6 lg:pl-8">
+                            <h3 class="font-display font-semibold text-stone-100 text-xl leading-snug">
+                                I'm a software engineering student focused on building clean backend architectures &amp; services that solve real-world problems.
+                            </h3>
+                            <div class="mt-6 flex items-center justify-between gap-4">
+                                <p class="text-xs font-mono text-stone-500 max-w-[140px] leading-relaxed">Let's build something that matters together</p>
+                                <a href="#contact" class="inline-flex items-center gap-2 bg-indigo-600 text-white rounded-full pl-5 pr-1.5 py-1.5 text-sm font-semibold shadow-lg shadow-indigo-950/50 hover:scale-105 transition-transform">
+                                    Get in touch
+                                    <span class="w-8 h-8 rounded-full bg-white flex items-center justify-center text-indigo-600">
+                                        <i class="fa-solid fa-arrow-right text-xs"></i>
+                                    </span>
+                                </a>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Right Column: Profile Photo Frame -->
-                    <div class="lg:col-span-5 flex justify-center">
-                        <div class="relative w-full max-w-sm sm:max-w-md group">
-                            
-                            <div class="absolute -inset-1 bg-gradient-to-tr from-indigo-600 via-indigo-500 to-sky-400 rounded-3xl blur-lg opacity-40 group-hover:opacity-75 transition duration-500"></div>
+                    <!-- Grid: Experience & Education Timeline -->
+                    <div id="experience" class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start pt-10">
 
-                            <div class="relative rounded-3xl bg-zinc-900 border border-zinc-800 p-3 sm:p-4 overflow-hidden shadow-2xl">
-                                
-                                <div class="flex items-center justify-between pb-3 px-2 border-b border-zinc-800 text-xs font-mono text-zinc-400">
-                                    <div class="flex items-center space-x-1.5">
-                                        <span class="w-2.5 h-2.5 rounded-full bg-red-500/80 inline-block"></span>
-                                        <span class="w-2.5 h-2.5 rounded-full bg-yellow-500/80 inline-block"></span>
-                                        <span class="w-2.5 h-2.5 rounded-full bg-green-500/80 inline-block"></span>
+                        <!-- Left: Experience Section (Altobee) -->
+                        <div class="lg:col-span-6 space-y-6">
+                            <h3 class="font-display font-bold text-white text-lg flex items-center space-x-2">
+                                <i class="fa-solid fa-briefcase text-sky-400"></i>
+                                <span>Work Experience</span>
+                            </h3>
+
+                            <div class="grad-line-top p-6 rounded-3xl bg-navy-900/80 border border-white/5 space-y-3 hover:border-indigo-500/50 hover:shadow-[0_0_45px_-12px_rgba(79,70,229,0.35)] transition-all duration-300">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-xs font-mono px-3 py-1 rounded-full bg-indigo-950/60 text-indigo-300 border border-indigo-800/50">Backend Trainee</span>
+                                    <span class="text-xs font-mono text-stone-400">Altobee</span>
+                                </div>
+                                <h4 class="font-display text-base font-bold text-white">Backend Developer Trainee</h4>
+                                <p class="text-xs text-stone-300 leading-relaxed">
+                                    Developing RESTful backend services, database schema design, and API integration for web platforms. Specialized in PHP 8.3, Laravel 12, MySQL, and server-side business logic optimization.
+                                </p>
+                                <div class="pt-2 flex flex-wrap gap-2">
+                                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-navy-950 text-stone-400 border border-white/10">Laravel 12</span>
+                                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-navy-950 text-stone-400 border border-white/10">PHP 8.3</span>
+                                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-navy-950 text-stone-400 border border-white/10">REST API</span>
+                                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-navy-950 text-stone-400 border border-white/10">MySQL</span>
+                                </div>
+                            </div>
+
+                            <!-- Tech Stack Summary -->
+                            <div class="grad-line-top p-6 rounded-3xl bg-navy-900/50 border border-white/5 space-y-4">
+                                <h4 class="text-xs font-mono text-sky-300 uppercase tracking-wider flex items-center space-x-2">
+                                    <i class="fa-solid fa-layer-group"></i>
+                                    <span>Skills &amp; Tools Matrix</span>
+                                </h4>
+
+                                <div class="space-y-3">
+                                    <div>
+                                        <p class="text-[11px] font-mono text-stone-400 mb-1.5">Backend &amp; Database:</p>
+                                        <div class="flex flex-wrap gap-1.5">
+                                            <span class="px-2.5 py-1 rounded-lg bg-navy-950 border border-white/10 text-xs font-medium text-stone-200">PHP 8.3</span>
+                                            <span class="px-2.5 py-1 rounded-lg bg-navy-950 border border-white/10 text-xs font-medium text-stone-200">Laravel 12</span>
+                                            <span class="px-2.5 py-1 rounded-lg bg-navy-950 border border-white/10 text-xs font-medium text-stone-200">REST API Design</span>
+                                            <span class="px-2.5 py-1 rounded-lg bg-navy-950 border border-white/10 text-xs font-medium text-stone-200">MySQL</span>
+                                            <span class="px-2.5 py-1 rounded-lg bg-navy-950 border border-white/10 text-xs font-medium text-stone-200">PostgreSQL</span>
+                                        </div>
                                     </div>
-                                    <span class="text-[11px] text-zinc-400">FOTODIRI.png</span>
+                                    <div>
+                                        <p class="text-[11px] font-mono text-stone-400 mb-1.5">Frontend &amp; Tools:</p>
+                                        <div class="flex flex-wrap gap-1.5">
+                                            <span class="px-2.5 py-1 rounded-lg bg-navy-950 border border-white/10 text-xs font-medium text-stone-200">Tailwind CSS</span>
+                                            <span class="px-2.5 py-1 rounded-lg bg-navy-950 border border-white/10 text-xs font-medium text-stone-200">JavaScript</span>
+                                            <span class="px-2.5 py-1 rounded-lg bg-navy-950 border border-white/10 text-xs font-medium text-stone-200">Git / GitHub</span>
+                                            <span class="px-2.5 py-1 rounded-lg bg-navy-950 border border-white/10 text-xs font-medium text-stone-200">Vite</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right: Education Timeline (SD, SMP, SMK) -->
+                        <div id="education" class="lg:col-span-6 space-y-6">
+                            <h3 class="font-display font-bold text-white text-lg flex items-center space-x-2">
+                                <i class="fa-solid fa-graduation-cap text-indigo-400"></i>
+                                <span>Education</span>
+                            </h3>
+
+                            <div class="relative border-l-2 border-[#26263a] ml-3 space-y-6 pl-6">
+
+                                <!-- Edu 1: SMK -->
+                                <div class="relative group">
+                                    <div class="absolute -left-[31px] top-1.5 w-4 h-4 rounded-full bg-gradient-to-br from-sky-400 to-indigo-600 border-4 border-navy-950 group-hover:scale-125 transition-transform shadow-[0_0_12px_rgba(99,102,241,0.6)]"></div>
+                                    <div class="grad-line-top p-5 rounded-2xl bg-navy-900/70 border border-white/5 space-y-1">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-xs font-mono text-indigo-400 font-semibold">SMK (Sekolah Menengah Kejuruan)</span>
+                                            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-950/80 text-emerald-300 border border-emerald-900/60">Active Student</span>
+                                        </div>
+                                        <h4 class="font-display text-sm font-bold text-white">SMK Negeri 20 Jakarta</h4>
+                                        <p class="text-xs font-medium text-stone-300">Rekayasa Perangkat Lunak (Software Engineering)</p>
+                                        <p class="text-xs text-stone-400 pt-1 leading-relaxed">
+                                            Mempelajari algoritma pemrogaman, Object-Oriented Programming (OOP), arsitektur basis data relasional, pengembangan REST API, pembuatan web app dinamis, dan persiapan Uji Sertifikasi Kompetensi (USK).
+                                        </p>
+                                    </div>
                                 </div>
 
-                                <!-- FOTO PROFIL (Replace src) -->
-                                <div class="mt-3 relative aspect-square w-full rounded-2xl overflow-hidden bg-zinc-950 border border-zinc-800 flex flex-col items-center justify-center group/img">
-                                    <img id="profile-img" 
-                                         src="FOTODIRI.png" 
-                                         alt="Gazhy Arkana Pramudito Profile" 
+                                <!-- Edu 2: SMP -->
+                                <div class="relative group">
+                                    <div class="absolute -left-[31px] top-1.5 w-4 h-4 rounded-full bg-indigo-500/70 border-4 border-navy-950 group-hover:scale-125 transition-transform"></div>
+                                    <div class="grad-line-top p-5 rounded-2xl bg-navy-900/40 border border-white/5 space-y-1">
+                                        <span class="text-xs font-mono text-sky-300 font-semibold">SMP (Sekolah Menengah Pertama)</span>
+                                        <h4 class="font-display text-sm font-bold text-white">SMP Negeri 226 Jakarta</h4>
+                                        <p class="text-xs text-stone-400 leading-relaxed">
+                                           2021-2024: Menyelesaikan pendidikan menengah pertama formal dan memperluas pengetahuan dasar dalam pemrograman.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <!-- Edu 3: SD -->
+                                <div class="relative group">
+                                    <div class="absolute -left-[31px] top-1.5 w-4 h-4 rounded-full bg-indigo-900 border-4 border-navy-950 group-hover:scale-125 transition-transform"></div>
+                                    <div class="grad-line-top p-5 rounded-2xl bg-navy-900/20 border border-white/5 space-y-1">
+                                        <span class="text-xs font-mono text-stone-400 font-semibold">SD (Sekolah Dasar)</span>
+                                        <h4 class="font-display text-sm font-bold text-white">SD Negeri Pondok Labu 07 Jakarta</h4>
+                                        <p class="text-xs text-stone-400 leading-relaxed">
+                                            2015-2021: Menyelesaikan pendidikan dasar formal dan membangun fondasi awal dalam logika pemrograman dan teknologi.
+                                        </p>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- ========================================== -->
+            <!-- 4. FEATURED PROJECTS PANEL (EXACTLY 3)     -->
+            <!-- ========================================== -->
+            <section id="projects" class="mt-2 sm:mt-3 rounded-[2rem] sm:rounded-[2.5rem] section-panel border border-white/5 py-14 sm:py-20 relative overflow-hidden">
+                <div class="max-w-7xl mx-auto px-5 sm:px-8">
+
+                    <div class="grad-line-top flex flex-col md:flex-row md:items-end justify-between mb-12 relative">
+                        <div>
+                            <span class="text-xs font-mono text-sky-200/80">[#06]</span>
+                            <div class="text-xs font-mono text-indigo-400 uppercase tracking-widest mb-1 mt-1">// Featured Works</div>
+                            <h2 class="font-display text-2xl sm:text-4xl font-bold text-white tracking-tight">Featured <span class="grad-text">Projects</span></h2>
+                        </div>
+                        <div class="text-xs text-stone-400 mt-2 md:mt-0 font-mono">
+                            Applications built with Laravel 12, PHP 8.3, &amp; Modern Frameworks
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 sm:gap-8">
+
+                        <!-- PROYEK 1: TataKelas -->
+                        <div class="grad-line-top rounded-3xl bg-navy-900/70 border border-white/5 p-6 flex flex-col justify-between space-y-6 hover:border-indigo-500/50 hover:shadow-[0_0_45px_-12px_rgba(79,70,229,0.35)] transition-all duration-300 group">
+                            <div class="space-y-4">
+
+                                <!-- SCREENSHOT FOTO PROYEK 1: TATAKELAS -->
+                                <div class="relative aspect-video w-full rounded-2xl overflow-hidden bg-navy-950 border border-white/10 group/img shadow-lg">
+                                    <img id="project-1-img"
+                                         src="TATAKELAS.png"
+                                         alt="TataKelas LMS Preview"
                                          class="w-full h-full object-cover transition-transform duration-500 group-hover/img:scale-105"
-                                         onerror="this.onerror=null; this.src='https://placehold.co/600x600/18181b/818cf8?text=Gazhy+Arkana';">
-                                    
-                                    <div class="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-transparent opacity-60"></div>
-                                    
-                                    <div class="absolute bottom-3 left-3 right-3 p-3 rounded-xl bg-zinc-900/90 backdrop-blur border border-zinc-800 text-left">
-                                        <p class="text-xs font-semibold text-white">Gazhy Arkana Pramudito</p>
-                                        <p class="text-[11px] text-zinc-400 font-mono">SMKN 20 Jakarta - Software Engineering</p>
+                                         onerror="this.onerror=null; this.src='https://placehold.co/800x450/131320/818cf8?text=TataKelas+LMS&font=inter';">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-navy-900/80 via-transparent to-transparent opacity-60"></div>
+                                    <div class="absolute top-3 left-3">
+                                        <span class="px-2.5 py-1 rounded-full bg-[#1e1b4b]/80 border border-indigo-700/50 text-indigo-300 text-[10px] font-mono font-semibold">
+                                            Hybrid LMS &amp; Knowledge Bookmark Manager
+                                        </span>
                                     </div>
+                                    <span class="absolute top-3 right-3 text-xs font-mono text-sky-200/80">[01]</span>
                                 </div>
 
-                                <div class="mt-3 pt-3 border-t border-zinc-800/80 flex items-center justify-between text-xs text-zinc-400">
-                                    <span class="font-mono text-[10px]"><i class="fa-solid fa-code text-indigo-400 mr-1"></i><!-- FOTO PROFIL (Replace src) --></span>
-                                    <button onclick="promptChangeProfilePic()" class="text-[11px] text-indigo-400 hover:underline flex items-center space-x-1">
-                                        <i class="fa-solid fa-image"></i>
-                                        <span>Uji Foto URL</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </section>
-
-        <!-- ========================================== -->
-        <!-- 3. ABOUT & EXPERIENCE & EDUCATION          -->
-        <!-- ========================================== -->
-        <section id="about" class="py-20 border-b border-zinc-900 relative">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-16">
-                
-                <!-- Section Header -->
-                <div class="flex flex-col md:flex-row md:items-end justify-between">
-                    <div>
-                        <div class="text-xs font-mono text-indigo-400 uppercase tracking-widest mb-1">// Profile &amp; Experience</div>
-                        <h2 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">About &amp; Work Experience</h2>
-                    </div>
-                    <p class="text-xs text-zinc-400 max-w-md mt-2 md:mt-0">
-                        Focusing on backend web architecture, API development, database optimization, and software engineering practices.
-                    </p>
-                </div>
-
-                <!-- Grid: Experience & Education Timeline -->
-                <div id="experience" class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
-                    
-                    <!-- Left: Experience Section (Altobee) -->
-                    <div class="lg:col-span-6 space-y-6">
-                        <h3 class="text-lg font-bold text-white flex items-center space-x-2">
-                            <i class="fa-solid fa-briefcase text-sky-400"></i>
-                            <span>Work Experience</span>
-                        </h3>
-
-                        <div class="p-6 rounded-3xl bg-zinc-900/90 border border-zinc-800 space-y-3 relative hover:border-indigo-500/40 transition-all">
-                            <div class="flex items-center justify-between">
-                                <span class="text-xs font-mono px-3 py-1 rounded-full bg-indigo-950 text-indigo-300 border border-indigo-800">Backend Trainee</span>
-                                <span class="text-xs font-mono text-zinc-400">Altobee</span>
-                            </div>
-                            <h4 class="text-base font-bold text-white">Backend Developer Trainee</h4>
-                            <p class="text-xs text-zinc-300 leading-relaxed">
-                                Developing RESTful backend services, database schema design, and API integration for web platforms. Specialized in PHP 8.3, Laravel 12, MySQL, and server-side business logic optimization.
-                            </p>
-                            <div class="pt-2 flex flex-wrap gap-2">
-                                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-950 text-zinc-400 border border-zinc-800">Laravel 12</span>
-                                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-950 text-zinc-400 border border-zinc-800">PHP 8.3</span>
-                                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-950 text-zinc-400 border border-zinc-800">REST API</span>
-                                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-950 text-zinc-400 border border-zinc-800">MySQL</span>
-                            </div>
-                        </div>
-
-                        <!-- Tech Stack Summary -->
-                        <div id="skills" class="p-6 rounded-3xl bg-zinc-900/60 border border-zinc-800 space-y-4">
-                            <h4 class="text-xs font-mono text-indigo-300 uppercase tracking-wider flex items-center space-x-2">
-                                <i class="fa-solid fa-layer-group"></i>
-                                <span>Skills &amp; Tools Matrix</span>
-                            </h4>
-                            
-                            <div class="space-y-3">
-                                <div>
-                                    <p class="text-[11px] font-mono text-zinc-400 mb-1.5">Backend &amp; Database:</p>
-                                    <div class="flex flex-wrap gap-1.5">
-                                        <span class="px-2.5 py-1 rounded-lg bg-zinc-950 border border-zinc-800 text-xs font-medium text-zinc-200">PHP 8.3</span>
-                                        <span class="px-2.5 py-1 rounded-lg bg-zinc-950 border border-zinc-800 text-xs font-medium text-zinc-200">Laravel 12</span>
-                                        <span class="px-2.5 py-1 rounded-lg bg-zinc-950 border border-zinc-800 text-xs font-medium text-zinc-200">REST API Design</span>
-                                        <span class="px-2.5 py-1 rounded-lg bg-zinc-950 border border-zinc-800 text-xs font-medium text-zinc-200">MySQL</span>
-                                        <span class="px-2.5 py-1 rounded-lg bg-zinc-950 border border-zinc-800 text-xs font-medium text-zinc-200">PostgreSQL</span>
-                                    </div>
-                                </div>
-                                <div>
-                                    <p class="text-[11px] font-mono text-zinc-400 mb-1.5">Frontend &amp; Tools:</p>
-                                    <div class="flex flex-wrap gap-1.5">
-                                        <span class="px-2.5 py-1 rounded-lg bg-zinc-950 border border-zinc-800 text-xs font-medium text-zinc-200">Tailwind CSS</span>
-                                        <span class="px-2.5 py-1 rounded-lg bg-zinc-950 border border-zinc-800 text-xs font-medium text-zinc-200">JavaScript</span>
-                                        <span class="px-2.5 py-1 rounded-lg bg-zinc-950 border border-zinc-800 text-xs font-medium text-zinc-200">Git / GitHub</span>
-                                        <span class="px-2.5 py-1 rounded-lg bg-zinc-950 border border-zinc-800 text-xs font-medium text-zinc-200">Vite</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Right: Education Timeline (SD, SMP, SMK) -->
-                    <div id="education" class="lg:col-span-6 space-y-6">
-                        <h3 class="text-lg font-bold text-white flex items-center space-x-2">
-                            <i class="fa-solid fa-graduation-cap text-indigo-400"></i>
-                            <span>Education</span>
-                        </h3>
-
-                        <div class="relative border-l-2 border-zinc-800 ml-3 space-y-6 pl-6">
-                            
-                            <!-- Edu 1: SMK -->
-                            <div class="relative group">
-                                <div class="absolute -left-[31px] top-1.5 w-4 h-4 rounded-full bg-indigo-600 border-4 border-zinc-950 group-hover:scale-125 transition-transform"></div>
-                                <div class="p-5 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-1">
+                                <div class="space-y-1">
                                     <div class="flex items-center justify-between">
-                                        <span class="text-xs font-mono text-indigo-400 font-semibold">SMK (Sekolah Menengah Kejuruan)</span>
-                                        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800">Active Student</span>
+                                        <h3 class="font-display text-lg font-bold text-white group-hover:text-indigo-300 transition-colors">
+                                            TataKelas
+                                        </h3>
+                                        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-navy-950 text-stone-300 border border-white/10">USK Ready</span>
                                     </div>
-                                    <h4 class="text-sm font-bold text-white">SMK Negeri 20 Jakarta</h4>
-                                    <p class="text-xs font-medium text-zinc-300">Rekayasa Perangkat Lunak (Software Engineering)</p>
-                                    <p class="text-xs text-zinc-400 pt-1 leading-relaxed">
-                                        Mempelajari algoritma pemrogaman, Object-Oriented Programming (OOP), arsitektur basis data relasional, pengembangan REST API, pembuatan web app dinamis, dan persiapan Uji Sertifikasi Kompetensi (USK).
-                                    </p>
+                                    <p class="text-xs font-mono text-stone-400">Laravel 12 - PHP 8.3 - Tailwind CSS - MySQL</p>
                                 </div>
+
+                                <p class="text-xs text-stone-300 leading-relaxed">
+                                    Context-based bookmark &amp; LMS hub with strict data isolation, private workspaces for student learning resources, shared classroom materials, and assignment submission systems with grade management.
+                                </p>
                             </div>
 
-                            <!-- Edu 2: SMP -->
-                            <div class="relative group">
-                                <div class="absolute -left-[31px] top-1.5 w-4 h-4 rounded-full bg-zinc-700 border-4 border-zinc-950 group-hover:scale-125 transition-transform"></div>
-                                <div class="p-5 rounded-2xl bg-zinc-900/70 border border-zinc-800 space-y-1">
-                                    <span class="text-xs font-mono text-sky-400 font-semibold">SMP (Sekolah Menengah Pertama)</span>
-                                    <h4 class="text-sm font-bold text-white">SMP Negeri 226 Jakarta</h4>
-                                    <p class="text-xs text-zinc-400 leading-relaxed">
-                                       2021-2024: Menyelesaikan pendidikan menengah pertama formal dan memperluas pengetahuan dasar dalam pemrograman.
-                                    </p>
+                            <div class="pt-4 border-t border-white/5 flex items-center justify-between">
+                                <button onclick="openModal('folderin')" class="px-3 py-1.5 rounded-full bg-navy-950 border border-white/10 hover:border-indigo-700 text-stone-200 text-xs font-medium transition-all flex items-center space-x-1">
+                                    <i class="fa-solid fa-circle-info"></i>
+                                    <span>Detail PRD</span>
+                                </button>
+                                <a href="https://github.com/XWAYLAND/FolderIn" target="_blank" rel="noopener" class="px-4 py-1.5 rounded-full bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold transition-all flex items-center space-x-1">
+                                    <i class="fa-brands fa-github"></i> Repo
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- PROYEK 2: Visitor Management System (VMS) -->
+                        <div class="grad-line-top rounded-3xl bg-navy-900/70 border border-white/5 p-6 flex flex-col justify-between space-y-6 hover:border-sky-500/50 hover:shadow-[0_0_45px_-12px_rgba(56,189,248,0.35)] transition-all duration-300 group">
+                            <div class="space-y-4">
+
+                                <!-- SCREENSHOT FOTO PROYEK 2: VISITOR MANAGEMENT SYSTEM -->
+                                <div class="relative aspect-video w-full rounded-2xl overflow-hidden bg-navy-950 border border-white/10 group/img shadow-lg">
+                                    <img id="project-2-img"
+                                         src="VMS.jpg"
+                                         alt="Visitor Management System Preview"
+                                         class="w-full h-full object-cover transition-transform duration-500 group-hover/img:scale-105"
+                                         onerror="this.onerror=null; this.src='https://placehold.co/800x450/131320/38bdf8?text=Visitor+Management+System&font=inter';">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-navy-900/80 via-transparent to-transparent opacity-60"></div>
+                                    <div class="absolute top-3 left-3">
+                                        <span class="px-2.5 py-1 rounded-full bg-sky-950/80 border border-sky-700/50 text-sky-300 text-[10px] font-mono font-semibold">
+                                            Office Guest &amp; Security Access System
+                                        </span>
+                                    </div>
+                                    <span class="absolute top-3 right-3 text-xs font-mono text-sky-200/80">[02]</span>
                                 </div>
+
+                                <div class="space-y-1">
+                                    <div class="flex items-center justify-between">
+                                        <h3 class="font-display text-lg font-bold text-white group-hover:text-sky-300 transition-colors">
+                                            Visitor Management System (VMS)
+                                        </h3>
+                                        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-navy-950 text-stone-300 border border-white/10">Enterprise</span>
+                                    </div>
+                                    <p class="text-xs font-mono text-stone-400">Laravel 12 - PHP 8.3 - Tailwind CSS - MySQL</p>
+                                </div>
+
+                                <p class="text-xs text-stone-300 leading-relaxed">
+                                    Enterprise-grade visitor management platform for office security logging, QR check-in verification, host notifications, and access pass management with automated PDF/Excel reporting.
+                                </p>
                             </div>
 
-                            <!-- Edu 3: SD -->
-                            <div class="relative group">
-                                <div class="absolute -left-[31px] top-1.5 w-4 h-4 rounded-full bg-zinc-800 border-4 border-zinc-950 group-hover:scale-125 transition-transform"></div>
-                                <div class="p-5 rounded-2xl bg-zinc-900/40 border border-zinc-800 space-y-1">
-                                    <span class="text-xs font-mono text-zinc-400 font-semibold">SD (Sekolah Dasar)</span>
-                                    <h4 class="text-sm font-bold text-white">SD Negeri Pondok Labu 07 Jakarta</h4>
-                                    <p class="text-xs text-zinc-400 leading-relaxed">
-                                        2015-2021: Menyelesaikan pendidikan dasar formal dan membangun fondasi awal dalam logika pemrograman dan teknologi.
-                                    </p>
+                            <div class="pt-4 border-t border-white/5 flex items-center justify-between">
+                                <button onclick="openModal('visitor')" class="px-3 py-1.5 rounded-full bg-navy-950 border border-white/10 hover:border-sky-700 text-stone-200 text-xs font-medium transition-all flex items-center space-x-1">
+                                    <i class="fa-solid fa-circle-info"></i>
+                                    <span>Detail</span>
+                                </button>
+                                <a href="https://github.com/XWAYLAND" target="_blank" rel="noopener" class="px-4 py-1.5 rounded-full bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold transition-all flex items-center space-x-1">
+                                    <i class="fa-brands fa-github"></i> Repo
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- PROYEK 3: E-Library Loaning System (Collaboration Project) -->
+                        <div class="grad-line-top rounded-3xl bg-navy-900/70 border border-white/5 p-6 flex flex-col justify-between space-y-6 hover:border-violet-500/50 hover:shadow-[0_0_45px_-12px_rgba(139,92,246,0.35)] transition-all duration-300 group">
+                            <div class="space-y-4">
+
+                                <!-- SCREENSHOT FOTO PROYEK 3: E-LIBRARY LOANING SYSTEM -->
+                                <div class="relative aspect-video w-full rounded-2xl overflow-hidden bg-navy-950 border border-white/10 group/img shadow-lg">
+                                    <img id="project-3-img"
+                                         src="ELMS.png"
+                                         alt="E-Library Loaning System Preview"
+                                         class="w-full h-full object-cover transition-transform duration-500 group-hover/img:scale-105"
+                                         onerror="this.onerror=null; this.src='https://placehold.co/800x450/131320/a78bfa?text=E-Library+Loaning+System&font=inter';">
+                                    <div class="absolute inset-0 bg-gradient-to-t from-navy-900/80 via-transparent to-transparent opacity-60"></div>
+                                    <div class="absolute top-3 left-3">
+                                        <span class="px-2.5 py-1 rounded-full bg-violet-950/80 border border-violet-700/50 text-violet-300 text-[10px] font-mono font-semibold">
+                                            Collaborative Mobile &amp; Web Ecosystem
+                                        </span>
+                                    </div>
+                                    <span class="absolute top-3 right-3 text-xs font-mono text-violet-200/70">[03]</span>
                                 </div>
+
+                                <div class="space-y-1">
+                                    <div class="flex items-center justify-between">
+                                        <h3 class="font-display text-lg font-bold text-white group-hover:text-violet-300 transition-colors">
+                                            E-Library Loaning System
+                                        </h3>
+                                        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-navy-950 text-stone-300 border border-white/10">Collaboration</span>
+                                    </div>
+                                    <p class="text-xs font-mono text-stone-400">Laravel 12 REST API - Flutter - MySQL</p>
+                                </div>
+
+                                <p class="text-xs text-stone-300 leading-relaxed">
+                                    Collaborative digital library platform featuring automated book loan tracking, fine management, inventory cataloging, and seamless REST API synchronization between Laravel backend and Flutter mobile client.
+                                </p>
                             </div>
 
+                            <div class="pt-4 border-t border-white/5 flex items-center justify-between">
+                                <button onclick="openModal('elibrary')" class="px-3 py-1.5 rounded-full bg-navy-950 border border-white/10 hover:border-violet-700 text-stone-200 text-xs font-medium transition-all flex items-center space-x-1">
+                                    <i class="fa-solid fa-circle-info"></i>
+                                    <span>Detail</span>
+                                </button>
+                                <a href="https://github.com/XWAYLAND" target="_blank" rel="noopener" class="px-4 py-1.5 rounded-full bg-violet-600 hover:bg-violet-500 text-white text-xs font-semibold transition-all flex items-center space-x-1">
+                                    <i class="fa-brands fa-github"></i> Repo
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================== -->
+            <!-- 5. ACHIEVEMENTS PANEL (PRESTASI)           -->
+            <!-- ========================================== -->
+            <section id="achievements" class="mt-2 sm:mt-3 rounded-[2rem] sm:rounded-[2.5rem] section-panel border border-white/5 py-14 sm:py-20 relative overflow-hidden">
+                <div class="max-w-7xl mx-auto px-5 sm:px-8">
+
+                    <div class="grad-line-top flex flex-col md:flex-row md:items-end justify-between mb-12 relative">
+                        <div>
+                            <span class="text-xs font-mono text-sky-200/80">[#07]</span>
+                            <div class="text-xs font-mono text-amber-400 uppercase tracking-widest mb-1 mt-1">// Achievements</div>
+                            <h2 class="font-display text-2xl sm:text-4xl font-bold text-white tracking-tight">Prestasi</h2>
+                        </div>
+                        <div class="text-xs text-stone-400 mt-2 md:mt-0 font-mono">
+                            LKS Tingkat Daerah Jakarta Selatan 1 &bull; 2025 &amp; 2026
                         </div>
                     </div>
 
-                </div>
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8">
 
-            </div>
-        </section>
+                        <!-- PRESTASI 1: LKS Web Technologies -->
+                        <div class="grad-line-top rounded-3xl bg-navy-900/70 border border-white/5 p-6 flex flex-col justify-between space-y-6 hover:border-amber-500/40 hover:shadow-[0_0_45px_-12px_rgba(245,158,11,0.25)] transition-all duration-300 group">
+                            <div class="space-y-4">
 
-        <!-- ========================================== -->
-        <!-- 4. FEATURED PROJECTS SECTION (EXACTLY 3)   -->
-        <!-- ========================================== -->
-        <section id="projects" class="py-20 border-b border-zinc-900 relative">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                
-                <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
-                    <div>
-                        <div class="text-xs font-mono text-indigo-400 uppercase tracking-widest mb-1">// Featured Works</div>
-                        <h2 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">Featured Projects</h2>
-                    </div>
-                    <div class="text-xs text-zinc-400 mt-2 md:mt-0 font-mono">
-                        Applications built with Laravel 12, PHP 8.3, &amp; Modern Frameworks
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    
-                    <!-- PROYEK 1: TataKelas -->
-                    <div class="rounded-3xl bg-zinc-900/90 border border-zinc-800 p-6 flex flex-col justify-between space-y-6 hover:border-indigo-500/40 transition-all duration-300 group">
-                        <div class="space-y-4">
-                            
-                            <!-- SCREENSHOT FOTO PROYEK 1: TATAKELAS -->
-                            <div class="relative aspect-video w-full rounded-2xl overflow-hidden bg-zinc-950 border border-zinc-800 group/img shadow-lg">
-                                <img id="project-1-img" 
-                                     src="TATAKELAS.png" 
-                                     alt="TataKelas LMS Preview" 
-                                     class="w-full h-full object-cover transition-transform duration-500 group-hover/img:scale-105"
-                                     onerror="this.onerror=null; this.src='https://placehold.co/800x450/18181b/818cf8?text=TataKelas+LMS&font=inter';">
-                                <div class="absolute inset-0 bg-gradient-to-t from-zinc-950/80 via-transparent to-transparent opacity-60"></div>
-                                <div class="absolute top-3 left-3">
-                                    <span class="px-2.5 py-1 rounded-full bg-indigo-950/80 border border-indigo-700/60 text-indigo-300 text-[10px] font-mono font-semibold">
-                                        Hybrid LMS &amp; Knowledge Bookmark Manager
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div class="space-y-1">
+                                <!-- SERTIFIKAT PRESTASI 1 -->
                                 <div class="flex items-center justify-between">
-                                    <h3 class="text-lg font-bold text-white group-hover:text-indigo-300 transition-colors">
-                                        TataKelas
-                                    </h3>
-                                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800">USK Ready</span>
-                                </div>
-                                <p class="text-xs font-mono text-zinc-400">Laravel 12 - PHP 8.3 - Tailwind CSS - MySQL</p>
-                            </div>
-
-                            <p class="text-xs text-zinc-300 leading-relaxed">
-                                Context-based bookmark &amp; LMS hub with strict data isolation, private workspaces for student learning resources, shared classroom materials, and assignment submission systems with grade management.
-                            </p>
-                        </div>
-
-                        <div class="pt-4 border-t border-zinc-800 flex items-center justify-between">
-                            <button onclick="openModal('folderin')" class="px-3 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-medium transition-all flex items-center space-x-1">
-                                <i class="fa-solid fa-circle-info"></i>
-                                <span>Detail PRD</span>
-                            </button>
-                            <a href="https://github.com/XWAYLAND/FolderIn" target="_blank" rel="noopener" class="px-3.5 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold transition-all">
-                                <i class="fa-brands fa-github mr-1"></i> Repo
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- PROYEK 2: Visitor Management System (VMS) -->
-                    <div class="rounded-3xl bg-zinc-900/90 border border-zinc-800 p-6 flex flex-col justify-between space-y-6 hover:border-indigo-500/40 transition-all duration-300 group">
-                        <div class="space-y-4">
-                            
-                            <!-- SCREENSHOT FOTO PROYEK 2: VISITOR MANAGEMENT SYSTEM -->
-                            <div class="relative aspect-video w-full rounded-2xl overflow-hidden bg-zinc-950 border border-zinc-800 group/img shadow-lg">
-                                <img id="project-2-img" 
-                                     src="VMS.jpg" 
-                                     alt="Visitor Management System Preview" 
-                                     class="w-full h-full object-cover transition-transform duration-500 group-hover/img:scale-105"
-                                     onerror="this.onerror=null; this.src='https://placehold.co/800x450/18181b/38bdf8?text=Visitor+Management+System&font=inter';">
-                                <div class="absolute inset-0 bg-gradient-to-t from-zinc-950/80 via-transparent to-transparent opacity-60"></div>
-                                <div class="absolute top-3 left-3">
-                                    <span class="px-2.5 py-1 rounded-full bg-sky-950/80 border border-sky-700/60 text-sky-300 text-[10px] font-mono font-semibold">
-                                        Office Guest &amp; Security Access System
+                                    <span class="px-2.5 py-1 rounded-full bg-amber-950/80 border border-amber-800/50 text-amber-300 text-[10px] font-mono font-semibold">
+                                        LKS &bull; Web Technologies
                                     </span>
+                                    <span class="text-[10px] font-mono text-amber-300/70 uppercase tracking-wider">2025</span>
+                                </div>
+                                <a href="LKSWEBTECH.png" target="_blank" rel="noopener" class="relative block aspect-[4/3] w-full rounded-2xl overflow-hidden bg-navy-950 border border-white/10 shadow-lg" title="Lihat piagam ukuran penuh">
+                                    <img src="LKSWEBTECH.png"
+                                         alt="Piagam Penghargaan Juara 3 LKS Web Technologies - Gazhy Arkana Pramudito"
+                                         class="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105">
+                                    <span class="absolute top-3 right-3 text-xs font-mono text-amber-200/70">[01]</span>
+                                </a>
+
+                                <div class="space-y-1">
+                                    <div class="flex items-center justify-between">
+                                        <h3 class="font-display text-lg font-bold text-white group-hover:text-amber-300 transition-colors">
+                                            Prestasi LKS Web Technologies
+                                        </h3>
+                                        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-900/60">Juara 3</span>
+                                    </div>
+                                    <p class="text-xs font-mono text-stone-400">LKS Web Technologies &bull; Tingkat Daerah Jakarta Selatan 1 &bull; 2025</p>
+                                </div>
+
+                                <p class="text-xs text-stone-300 leading-relaxed">
+                                    Meraih <span class="text-amber-300 font-semibold">Juara 3</span> pada Lomba Kompetensi Siswa (LKS) bidang Web Technologies tingkat Daerah Jakarta Selatan 1 tahun 2025. Kompetisi ini menguji kemampuan membangun aplikasi web full-stack: perancangan antarmuka responsif, implementasi logika backend, pengelolaan basis data relasional, hingga penerapan REST API dan deployment aplikasi.
+                                </p>
+
+                                <div class="flex flex-wrap gap-1.5">
+                                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-navy-950 text-stone-400 border border-white/10">HTML &amp; CSS</span>
+                                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-navy-950 text-stone-400 border border-white/10">JavaScript</span>
+                                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-navy-950 text-stone-400 border border-white/10">PHP</span>
+                                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-navy-950 text-stone-400 border border-white/10">Laravel</span>
+                                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-navy-950 text-stone-400 border border-white/10">MySQL</span>
                                 </div>
                             </div>
 
-                            <div class="space-y-1">
-                                <div class="flex items-center justify-between">
-                                    <h3 class="text-lg font-bold text-white group-hover:text-sky-300 transition-colors">
-                                        Visitor Management System (VMS)
-                                    </h3>
-                                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-800 text-zinc-300 border border-zinc-700">Enterprise</span>
-                                </div>
-                                <p class="text-xs font-mono text-zinc-400">Laravel 12 - PHP 8.3 - Tailwind CSS - MySQL</p>
-                            </div>
-
-                            <p class="text-xs text-zinc-300 leading-relaxed">
-                                Enterprise-grade visitor management platform for office security logging, QR check-in verification, host notifications, and access pass management with automated PDF/Excel reporting.
-                            </p>
-                        </div>
-
-                        <div class="pt-4 border-t border-zinc-800 flex items-center justify-between">
-                            <button onclick="openModal('visitor')" class="px-3 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-medium transition-all flex items-center space-x-1">
-                                <i class="fa-solid fa-circle-info"></i>
-                                <span>Detail</span>
-                            </button>
-                            <a href="https://github.com/XWAYLAND" target="_blank" rel="noopener" class="px-3.5 py-1.5 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-xs font-semibold transition-all">
-                                <i class="fa-brands fa-github mr-1"></i> Repo
-                            </a>
-                        </div>
-                    </div>
-
-                    <!-- PROYEK 3: E-Library Loaning System (Collaboration Project) -->
-                    <div class="rounded-3xl bg-zinc-900/90 border border-zinc-800 p-6 flex flex-col justify-between space-y-6 hover:border-indigo-500/40 transition-all duration-300 group">
-                        <div class="space-y-4">
-                            
-                            <!-- SCREENSHOT FOTO PROYEK 3: E-LIBRARY LOANING SYSTEM -->
-                            <div class="relative aspect-video w-full rounded-2xl overflow-hidden bg-zinc-950 border border-zinc-800 group/img shadow-lg">
-                                <img id="project-3-img" 
-                                     src="ELMS.png" 
-                                     alt="E-Library Loaning System Preview" 
-                                     class="w-full h-full object-cover transition-transform duration-500 group-hover/img:scale-105"
-                                     onerror="this.onerror=null; this.src='https://placehold.co/800x450/18181b/a855f7?text=E-Library+Loaning+System&font=inter';">
-                                <div class="absolute inset-0 bg-gradient-to-t from-zinc-950/80 via-transparent to-transparent opacity-60"></div>
-                                <div class="absolute top-3 left-3">
-                                    <span class="px-2.5 py-1 rounded-full bg-purple-950/80 border border-purple-700/60 text-purple-300 text-[10px] font-mono font-semibold">
-                                        Collaborative Mobile &amp; Web Ecosystem
-                                    </span>
-                                </div>
-                            </div>
-
-                            <div class="space-y-1">
-                                <div class="flex items-center justify-between">
-                                    <h3 class="text-lg font-bold text-white group-hover:text-purple-300 transition-colors">
-                                        E-Library Loaning System
-                                    </h3>
-                                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-purple-950 text-purple-300 border border-purple-800">Collaboration</span>
-                                </div>
-                                <p class="text-xs font-mono text-zinc-400">Laravel 12 REST API - Flutter - MySQL</p>
-                            </div>
-
-                            <p class="text-xs text-zinc-300 leading-relaxed">
-                                Collaborative digital library platform featuring automated book loan tracking, fine management, inventory cataloging, and seamless REST API synchronization between Laravel backend and Flutter mobile client.
-                            </p>
-                        </div>
-
-                        <div class="pt-4 border-t border-zinc-800 flex items-center justify-between">
-                            <button onclick="openModal('elibrary')" class="px-3 py-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-200 text-xs font-medium transition-all flex items-center space-x-1">
-                                <i class="fa-solid fa-circle-info"></i>
-                                <span>Detail</span>
-                            </button>
-                            <a href="https://github.com/XWAYLAND" target="_blank" rel="noopener" class="px-3.5 py-1.5 rounded-lg bg-purple-600 hover:bg-purple-500 text-white text-xs font-semibold transition-all">
-                                <i class="fa-brands fa-github mr-1"></i> Repo
-                            </a>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </section>
-
-        <!-- ========================================== -->
-        <!-- 5. ACHIEVEMENTS SECTION (PRESTASI)         -->
-        <!-- ========================================== -->
-        <section id="achievements" class="py-20 border-b border-zinc-900 relative">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-                <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
-                    <div>
-                        <div class="text-xs font-mono text-amber-400 uppercase tracking-widest mb-1">// Achievements</div>
-                        <h2 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">Prestasi</h2>
-                    </div>
-                    <div class="text-xs text-zinc-400 mt-2 md:mt-0 font-mono">
-                        LKS Tingkat Daerah Jakarta Selatan 1 &bull; 2025 &amp; 2026
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-
-                    <!-- PRESTASI 1: LKS Web Technologies -->
-                    <div class="rounded-3xl bg-zinc-900/90 border border-zinc-800 p-6 flex flex-col justify-between space-y-6 hover:border-amber-500/40 transition-all duration-300 group">
-                        <div class="space-y-4">
-
-                            <!-- SERTIFIKAT PRESTASI 1 -->
-                            <div class="flex items-center justify-between">
-                                <span class="px-2.5 py-1 rounded-full bg-amber-950/80 border border-amber-700/60 text-amber-300 text-[10px] font-mono font-semibold">
-                                    LKS &bull; Web Technologies
+                            <div class="pt-4 border-t border-white/5 flex items-center justify-between">
+                                <span class="text-[11px] font-mono text-stone-400 flex items-center space-x-1.5">
+                                    <i class="fa-solid fa-medal text-amber-400"></i>
+                                    <span>Juara 3 &mdash; Tingkat Daerah Jakarta Selatan 1</span>
                                 </span>
-                                <span class="text-[10px] font-mono text-amber-300/70 uppercase tracking-wider">2025</span>
+                                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-navy-950 text-stone-400 border border-white/10">2025</span>
                             </div>
-                            <a href="LKSWEBTECH.png" target="_blank" rel="noopener" class="relative block aspect-[4/3] w-full rounded-2xl overflow-hidden bg-zinc-950 border border-zinc-800 shadow-lg" title="Lihat piagam ukuran penuh">
-                                <img src="LKSWEBTECH.png" 
-                                     alt="Piagam Penghargaan Juara 3 LKS Web Technologies - Gazhy Arkana Pramudito" 
-                                     class="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105">
-                            </a>
+                        </div>
 
-                            <div class="space-y-1">
+                        <!-- PRESTASI 2: LKS IT Solution for Business -->
+                        <div class="grad-line-top rounded-3xl bg-navy-900/70 border border-white/5 p-6 flex flex-col justify-between space-y-6 hover:border-sky-500/40 hover:shadow-[0_0_45px_-12px_rgba(56,189,248,0.25)] transition-all duration-300 group">
+                            <div class="space-y-4">
+
+                                <!-- SERTIFIKAT PRESTASI 2 -->
                                 <div class="flex items-center justify-between">
-                                    <h3 class="text-lg font-bold text-white group-hover:text-amber-300 transition-colors">
-                                        Prestasi LKS Web Technologies
-                                    </h3>
-                                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-amber-950 text-amber-300 border border-amber-800">Juara 3</span>
+                                    <span class="px-2.5 py-1 rounded-full bg-sky-950/80 border border-sky-800/50 text-sky-300 text-[10px] font-mono font-semibold">
+                                        LKS &bull; IT Solution for Business
+                                    </span>
+                                    <span class="text-[10px] font-mono text-sky-300/70 uppercase tracking-wider">2026</span>
                                 </div>
-                                <p class="text-xs font-mono text-zinc-400">LKS Web Technologies &bull; Tingkat Daerah Jakarta Selatan 1 &bull; 2025</p>
+                                <a href="IT-SOLUTION.png" target="_blank" rel="noopener" class="relative block aspect-[4/3] w-full rounded-2xl overflow-hidden bg-navy-950 border border-white/10 shadow-lg" title="Lihat sertifikat ukuran penuh">
+                                    <img src="IT-SOLUTION.png"
+                                         alt="Sertifikat Juara Harapan 1 LKS IT Solution for Business - Gazhy Arkana Pramudito"
+                                         class="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105">
+                                    <span class="absolute top-3 right-3 text-xs font-mono text-sky-200/70">[02]</span>
+                                </a>
+
+                                <div class="space-y-1">
+                                    <div class="flex items-center justify-between">
+                                        <h3 class="font-display text-lg font-bold text-white group-hover:text-sky-300 transition-colors">
+                                            Prestasi LKS IT Solution for Business
+                                        </h3>
+                                        <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-sky-950 text-sky-300 border border-sky-900/60">Juara Harapan 1</span>
+                                    </div>
+                                    <p class="text-xs font-mono text-stone-400">LKS IT Solution for Business &bull; Tingkat Daerah Jakarta Selatan 1 &bull; 2026</p>
+                                </div>
+
+                                <p class="text-xs text-stone-300 leading-relaxed">
+                                    Meraih <span class="text-sky-300 font-semibold">Juara Harapan 1</span> pada Lomba Kompetensi Siswa (LKS) bidang IT Solution for Business tingkat Daerah Jakarta Selatan 1 tahun 2026. Kompetisi ini menuntut perancangan solusi teknologi informasi untuk kebutuhan bisnis: analisis kebutuhan pengguna, pemodelan proses bisnis, perancangan sistem informasi, pengembangan aplikasi desktop dan mobile menggunakan Kotlin dan C#, serta penyusunan presentasi solusi yang aplikatif dan terukur.
+                                </p>
+
+                                <div class="flex flex-wrap gap-1.5">
+                                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-navy-950 text-stone-400 border border-white/10">Business Analysis</span>
+                                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-navy-950 text-stone-400 border border-white/10">System Design</span>
+                                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-navy-950 text-stone-400 border border-white/10">Database</span>
+                                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-navy-950 text-stone-400 border border-white/10">UI/UX</span>
+                                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-navy-950 text-stone-400 border border-white/10">Desktop Development</span>
+                                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-navy-950 text-stone-400 border border-white/10">Mobile Development</span>
+                                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-navy-950 text-stone-400 border border-white/10">Kotlin</span>
+                                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-navy-950 text-stone-400 border border-white/10">C#</span>
+                                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-navy-950 text-stone-400 border border-white/10">Presentasi</span>
+                                </div>
                             </div>
 
-                            <p class="text-xs text-zinc-300 leading-relaxed">
-                                Meraih <span class="text-amber-300 font-semibold">Juara 3</span> pada Lomba Kompetensi Siswa (LKS) bidang Web Technologies tingkat Daerah Jakarta Selatan 1 tahun 2025. Kompetisi ini menguji kemampuan membangun aplikasi web full-stack: perancangan antarmuka responsif, implementasi logika backend, pengelolaan basis data relasional, hingga penerapan REST API dan deployment aplikasi.
-                            </p>
-
-                            <div class="flex flex-wrap gap-1.5">
-                                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-950 text-zinc-400 border border-zinc-800">HTML &amp; CSS</span>
-                                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-950 text-zinc-400 border border-zinc-800">JavaScript</span>
-                                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-950 text-zinc-400 border border-zinc-800">PHP</span>
-                                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-950 text-zinc-400 border border-zinc-800">Laravel</span>
-                                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-950 text-zinc-400 border border-zinc-800">MySQL</span>
+                            <div class="pt-4 border-t border-white/5 flex items-center justify-between">
+                                <span class="text-[11px] font-mono text-stone-400 flex items-center space-x-1.5">
+                                    <i class="fa-solid fa-medal text-sky-400"></i>
+                                    <span>Juara Harapan 1 &mdash; Tingkat Daerah Jakarta Selatan 1</span>
+                                </span>
+                                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-navy-950 text-stone-400 border border-white/10">2026</span>
                             </div>
                         </div>
 
-                        <div class="pt-4 border-t border-zinc-800 flex items-center justify-between">
-                            <span class="text-[11px] font-mono text-zinc-400 flex items-center space-x-1.5">
-                                <i class="fa-solid fa-medal text-amber-400"></i>
-                                <span>Juara 3 &mdash; Tingkat Daerah Jakarta Selatan 1</span>
-                            </span>
-                            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-950 text-zinc-400 border border-zinc-800">2025</span>
-                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ========================================== -->
+            <!-- 6. CONTACT PANEL (DIRECT CARDS ONLY)       -->
+            <!-- ========================================== -->
+            <section id="contact" class="mt-2 sm:mt-3 rounded-[2rem] sm:rounded-[2.5rem] section-panel border border-white/5 py-14 sm:py-20 relative overflow-hidden">
+                <div class="max-w-4xl mx-auto px-5 sm:px-8 text-center space-y-8">
+
+                    <div class="grad-line-top space-y-3 relative pt-2">
+                        <span class="text-xs font-mono text-sky-200/80">[#08]</span>
+                        <div class="text-xs font-mono text-indigo-400 uppercase tracking-widest mt-1">// Direct Contact</div>
+                        <h2 class="font-display text-2xl sm:text-4xl font-bold text-white tracking-tight">Hubungi <span class="grad-text">Saya</span></h2>
+                        <p class="text-xs sm:text-sm text-stone-400 max-w-xl mx-auto leading-relaxed">
+                            Tertarik untuk berdiskusi seputar rekayasa backend, arsitektur Laravel, REST API, atau peluang kerja sama profesional? Silakan terhubung via kanal berikut:
+                        </p>
                     </div>
 
-                    <!-- PRESTASI 2: LKS IT Solution for Business -->
-                    <div class="rounded-3xl bg-zinc-900/90 border border-zinc-800 p-6 flex flex-col justify-between space-y-6 hover:border-emerald-500/40 transition-all duration-300 group">
-                        <div class="space-y-4">
+                    <!-- Direct Contact Cards Grid -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
 
-                            <!-- SERTIFIKAT PRESTASI 2 -->
-                            <div class="flex items-center justify-between">
-                                <span class="px-2.5 py-1 rounded-full bg-emerald-950/80 border border-emerald-700/60 text-emerald-300 text-[10px] font-mono font-semibold">
-                                    LKS &bull; IT Solution for Business
-                                </span>
-                                <span class="text-[10px] font-mono text-emerald-300/70 uppercase tracking-wider">2026</span>
+                        <!-- LinkedIn Card -->
+                        <a href="https://www.linkedin.com/in/gazhy-arkana-028a50312/" target="_blank" rel="noopener" class="grad-line-top p-6 rounded-3xl bg-navy-900/70 border border-indigo-900/50 hover:bg-indigo-950/30 hover:border-indigo-500 hover:shadow-[0_0_45px_-12px_rgba(79,70,229,0.35)] transition-all group flex flex-col items-center space-y-3 shadow-lg">
+                            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-sky-400 to-indigo-600 flex items-center justify-center text-white text-xl shadow-md shadow-indigo-950/50 group-hover:scale-110 transition-transform">
+                                <i class="fa-brands fa-linkedin-in"></i>
                             </div>
-                            <a href="IT-SOLUTION.png" target="_blank" rel="noopener" class="relative block aspect-[4/3] w-full rounded-2xl overflow-hidden bg-zinc-950 border border-zinc-800 shadow-lg" title="Lihat sertifikat ukuran penuh">
-                                <img src="IT-SOLUTION.png" 
-                                     alt="Sertifikat Juara Harapan 1 LKS IT Solution for Business - Gazhy Arkana Pramudito" 
-                                     class="w-full h-full object-contain transition-transform duration-500 group-hover:scale-105">
-                            </a>
-
-                            <div class="space-y-1">
-                                <div class="flex items-center justify-between">
-                                    <h3 class="text-lg font-bold text-white group-hover:text-emerald-300 transition-colors">
-                                        Prestasi LKS IT Solution for Business
-                                    </h3>
-                                    <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-emerald-950 text-emerald-300 border border-emerald-800">Juara Harapan 1</span>
-                                </div>
-                                <p class="text-xs font-mono text-zinc-400">LKS IT Solution for Business &bull; Tingkat Daerah Jakarta Selatan 1 &bull; 2026</p>
+                            <div>
+                                <p class="text-xs font-bold text-white group-hover:text-indigo-300">LinkedIn Profile</p>
+                                <p class="text-[11px] font-mono text-indigo-400 mt-0.5">Gazhy Arkana Pramudito</p>
                             </div>
-
-                            <p class="text-xs text-zinc-300 leading-relaxed">
-                                Meraih <span class="text-emerald-300 font-semibold">Juara Harapan 1</span> pada Lomba Kompetensi Siswa (LKS) bidang IT Solution for Business tingkat Daerah Jakarta Selatan 1 tahun 2026. Kompetisi ini menuntut perancangan solusi teknologi informasi untuk kebutuhan bisnis: analisis kebutuhan pengguna, pemodelan proses bisnis, perancangan sistem informasi, pengembangan aplikasi desktop dan mobile menggunakan Kotlin dan C#, serta penyusunan presentasi solusi yang aplikatif dan terukur.
-                            </p>
-
-                            <div class="flex flex-wrap gap-1.5">
-                                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-950 text-zinc-400 border border-zinc-800">Business Analysis</span>
-                                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-950 text-zinc-400 border border-zinc-800">System Design</span>
-                                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-950 text-zinc-400 border border-zinc-800">Database</span>
-                                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-950 text-zinc-400 border border-zinc-800">UI/UX</span>
-                                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-950 text-zinc-400 border border-zinc-800">Desktop Development</span>
-                                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-950 text-zinc-400 border border-zinc-800">Mobile Development</span>
-                                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-950 text-zinc-400 border border-zinc-800">Kotlin</span>
-                                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-950 text-zinc-400 border border-zinc-800">C#</span>
-                                <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-950 text-zinc-400 border border-zinc-800">Presentasi</span>
-                            </div>
-                        </div>
-
-                        <div class="pt-4 border-t border-zinc-800 flex items-center justify-between">
-                            <span class="text-[11px] font-mono text-zinc-400 flex items-center space-x-1.5">
-                                <i class="fa-solid fa-medal text-emerald-400"></i>
-                                <span>Juara Harapan 1 &mdash; Tingkat Daerah Jakarta Selatan 1</span>
+                            <span class="text-[10px] text-stone-400 group-hover:text-white flex items-center space-x-1">
+                                <span>Connect on LinkedIn</span>
+                                <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
                             </span>
-                            <span class="text-[10px] font-mono px-2 py-0.5 rounded bg-zinc-950 text-zinc-400 border border-zinc-800">2026</span>
+                        </a>
+
+                        <!-- Email Copy Card -->
+                        <div class="grad-line-top p-6 rounded-3xl bg-navy-900/70 border border-white/10 hover:bg-navy-800 hover:border-sky-600/50 hover:shadow-[0_0_45px_-12px_rgba(56,189,248,0.35)] transition-all group flex flex-col items-center space-y-3 shadow-lg cursor-pointer" onclick="copyToClipboard('gazhy.arkana.pramudito@gmail.com', 'Email disalin!')">
+                            <div class="w-12 h-12 rounded-2xl bg-white flex items-center justify-center text-zinc-900 text-xl shadow-md group-hover:scale-110 transition-transform">
+                                <i class="fa-regular fa-envelope"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs font-bold text-white group-hover:text-sky-200">Email Address</p>
+                                <p class="text-[11px] font-mono text-stone-400 mt-0.5 truncate max-w-[180px]">gazhy.arkana.pramudito@gmail.com</p>
+                            </div>
+                            <span class="text-[10px] text-sky-400 group-hover:text-white flex items-center space-x-1">
+                                <i class="fa-regular fa-copy"></i>
+                                <span>Klik Salin Email</span>
+                            </span>
                         </div>
+
+                        <!-- GitHub Card -->
+                        <a href="https://github.com/XWAYLAND" target="_blank" rel="noopener" class="grad-line-top p-6 rounded-3xl bg-navy-900/70 border border-white/10 hover:bg-navy-800 hover:border-white/25 transition-all group flex flex-col items-center space-y-3 shadow-lg">
+                            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-navy-800 to-navy-950 border border-white/10 flex items-center justify-center text-white text-xl shadow-md group-hover:scale-110 transition-transform">
+                                <i class="fa-brands fa-github"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs font-bold text-white group-hover:text-stone-200">GitHub Repository</p>
+                                <p class="text-[11px] font-mono text-stone-400 mt-0.5">@XWAYLAND</p>
+                            </div>
+                            <span class="text-[10px] text-stone-400 group-hover:text-white flex items-center space-x-1">
+                                <span>Visit GitHub</span>
+                                <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
+                            </span>
+                        </a>
+
                     </div>
 
                 </div>
-            </div>
-        </section>
+            </section>
 
-        <!-- ========================================== -->
-        <!-- 6. CONTACT SECTION (DIRECT CARDS ONLY)     -->
-        <!-- ========================================== -->
-        <section id="contact" class="py-20 relative">
-            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8">
-                
-                <div class="space-y-3">
-                    <div class="text-xs font-mono text-indigo-400 uppercase tracking-widest">// Direct Contact</div>
-                    <h2 class="text-2xl sm:text-4xl font-extrabold text-white tracking-tight">Hubungi Saya</h2>
-                    <p class="text-xs sm:text-sm text-zinc-400 max-w-xl mx-auto leading-relaxed">
-                        Tertarik untuk berdiskusi seputar rekayasa backend, arsitektur Laravel, REST API, atau peluang kerja sama profesional? Silakan terhubung via kanal berikut:
+            <!-- FOOTER PANEL -->
+            <footer class="mt-2 sm:mt-3 rounded-[2rem] sm:rounded-[2.5rem] section-panel border border-white/5 py-8 relative overflow-hidden">
+                <div class="grad-line-top max-w-7xl mx-auto px-5 sm:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 relative pt-4">
+                    <div class="flex items-center space-x-2 text-xs text-stone-400 font-mono">
+                        <span class="font-bold text-indigo-400">GA.</span>
+                        <span> Gazhy Arkana Pramudito</span>
+                    </div>
+                    <p class="text-xs text-stone-400 font-mono text-center">
+                        Junior Web Developer
                     </p>
-                </div>
-
-                <!-- Direct Contact Cards Grid -->
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4">
-                    
-                    <!-- LinkedIn Card -->
-                    <a href="https://www.linkedin.com/in/gazhy-arkana-028a50312/" target="_blank" rel="noopener" class="p-6 rounded-3xl bg-zinc-900 border border-sky-800/60 hover:bg-sky-950/30 hover:border-sky-500 transition-all group flex flex-col items-center space-y-3 shadow-lg">
-                        <div class="w-12 h-12 rounded-2xl bg-sky-600 flex items-center justify-center text-white text-xl shadow-md shadow-sky-600/30 group-hover:scale-110 transition-transform">
-                            <i class="fa-brands fa-linkedin-in"></i>
-                        </div>
-                        <div>
-                            <p class="text-xs font-bold text-white group-hover:text-sky-300">LinkedIn Profile</p>
-                            <p class="text-[11px] font-mono text-sky-400 mt-0.5">Gazhy Arkana Pramudito</p>
-                        </div>
-                        <span class="text-[10px] text-zinc-400 group-hover:text-white flex items-center space-x-1">
-                            <span>Connect on LinkedIn</span>
-                            <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
-                        </span>
-                    </a>
-
-                    <!-- Email Copy Card -->
-                    <div class="p-6 rounded-3xl bg-zinc-900 border border-indigo-800/60 hover:bg-indigo-950/30 hover:border-indigo-500 transition-all group flex flex-col items-center space-y-3 shadow-lg cursor-pointer" onclick="copyToClipboard('gazhy.arkana.pramudito@gmail.com', 'Email disalin!')">
-                        <div class="w-12 h-12 rounded-2xl bg-indigo-600 flex items-center justify-center text-white text-xl shadow-md shadow-indigo-600/30 group-hover:scale-110 transition-transform">
-                            <i class="fa-regular fa-envelope"></i>
-                        </div>
-                        <div>
-                            <p class="text-xs font-bold text-white group-hover:text-indigo-300">Email Address</p>
-                            <p class="text-[11px] font-mono text-zinc-400 mt-0.5 truncate max-w-[180px]">gazhy.arkana.pramudito@gmail.com</p>
-                        </div>
-                        <span class="text-[10px] text-indigo-400 group-hover:text-white flex items-center space-x-1">
-                            <i class="fa-regular fa-copy"></i>
-                            <span>Klik Salin Email</span>
-                        </span>
+                    <div class="text-xs text-stone-400 font-mono">
+                        &copy; 2026 Gazhy Arkana.
                     </div>
-
-                    <!-- GitHub Card -->
-                    <a href="https://github.com/XWAYLAND" target="_blank" rel="noopener" class="p-6 rounded-3xl bg-zinc-900 border border-zinc-800 hover:bg-zinc-800/80 hover:border-zinc-700 transition-all group flex flex-col items-center space-y-3 shadow-lg">
-                        <div class="w-12 h-12 rounded-2xl bg-zinc-800 border border-zinc-700 flex items-center justify-center text-white text-xl shadow-md group-hover:scale-110 transition-transform">
-                            <i class="fa-brands fa-github"></i>
-                        </div>
-                        <div>
-                            <p class="text-xs font-bold text-white group-hover:text-zinc-200">GitHub Repository</p>
-                            <p class="text-[11px] font-mono text-zinc-400 mt-0.5">@XWAYLAND</p>
-                        </div>
-                        <span class="text-[10px] text-zinc-400 group-hover:text-white flex items-center space-x-1">
-                            <span>Visit GitHub</span>
-                            <i class="fa-solid fa-arrow-up-right-from-square text-[9px]"></i>
-                        </span>
-                    </a>
-
                 </div>
+            </footer>
 
-            </div>
-        </section>
+        </div>
     </main>
 
-    <!-- FOOTER -->
-    <footer class="bg-zinc-950 border-t border-zinc-900 py-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div class="flex items-center space-x-2 text-xs text-zinc-400 font-mono">
-                <span class="font-bold text-white">GA.</span>
-                <span> Gazhy Arkana Pramudito</span>
-            </div>
-            <p class="text-xs text-zinc-400 font-mono text-center">
-                Junior Web Developer
-            </p>
-            <div class="text-xs text-zinc-400 font-mono">
-                © 2026 Gazhy Arkana.
-            </div>
-        </div>
-    </footer>
-
     <!-- MODALS SPECIFICATION -->
-    <div id="modal-backdrop" class="fixed inset-0 z-50 bg-zinc-950/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
-        
+    <div id="modal-backdrop" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
+
         <!-- FolderIn Modal -->
-        <div id="modal-folderin" class="hidden w-full max-w-2xl bg-zinc-900 border border-zinc-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
-            <button onclick="closeModal()" class="absolute top-4 right-4 p-2 text-zinc-400 hover:text-white rounded-lg bg-zinc-800">
+        <div id="modal-folderin" class="hidden w-full max-w-2xl bg-navy-900 border border-white/10 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl relative max-h-[90vh] overflow-y-auto grad-line-top">
+            <button onclick="closeModal()" class="absolute top-4 right-4 p-2 text-stone-400 hover:text-white rounded-lg bg-navy-950 border border-white/10">
                 <i class="fa-solid fa-xmark text-base"></i>
             </button>
             <div class="space-y-2">
                 <span class="text-xs font-mono text-indigo-400 uppercase">// Project Architecture</span>
-                <h3 class="text-2xl font-bold text-white">TataKelas (Hybrid LMS &amp; Bookmark Hub)</h3>
+                <h3 class="font-display text-2xl font-bold text-white">TataKelas (Hybrid LMS &amp; Bookmark Hub)</h3>
             </div>
-            <div class="space-y-4 text-xs text-zinc-300 leading-relaxed">
+            <div class="space-y-4 text-xs text-stone-300 leading-relaxed">
                 <p>TataKelas is a hybrid learning ecosystem built with Laravel 12 for USK certification. Combines private workspace encapsulation with classroom material distribution and assignment grading.</p>
-                <div class="p-4 rounded-xl bg-zinc-950 border border-zinc-800 space-y-2">
+                <div class="p-4 rounded-xl bg-navy-950 border border-white/10 space-y-2">
                     <h4 class="font-bold text-white font-mono text-xs">Core Highlights:</h4>
-                    <ul class="list-disc pl-4 space-y-1 text-zinc-400">
+                    <ul class="list-disc pl-4 space-y-1 text-stone-400">
                         <li>Strict data isolation via Eloquent scope &amp; Laravel Policy.</li>
                         <li>Assignment submission system with due date &amp; late status detection.</li>
                         <li>Teacher feedback &amp; grading module (0-100 scale).</li>
                     </ul>
                 </div>
             </div>
-            <div class="pt-4 border-t border-zinc-800 flex justify-end space-x-3">
-                <button onclick="closeModal()" class="px-4 py-2 rounded-xl bg-zinc-800 text-zinc-300 text-xs font-medium">Close</button>
-                <a href="https://github.com/XWAYLAND/FolderIn" target="_blank" class="px-4 py-2 rounded-xl bg-indigo-600 text-white text-xs font-semibold">GitHub Repo</a>
+            <div class="pt-4 border-t border-white/5 flex justify-end space-x-3">
+                <button onclick="closeModal()" class="px-4 py-2 rounded-full bg-navy-950 border border-white/10 text-stone-300 text-xs font-medium">Close</button>
+                <a href="https://github.com/XWAYLAND/FolderIn" target="_blank" class="px-4 py-2 rounded-full bg-indigo-600 text-white text-xs font-semibold">GitHub Repo</a>
             </div>
         </div>
 
         <!-- Visitor Management System Modal -->
-        <div id="modal-visitor" class="hidden w-full max-w-2xl bg-zinc-900 border border-zinc-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
-            <button onclick="closeModal()" class="absolute top-4 right-4 p-2 text-zinc-400 hover:text-white rounded-lg bg-zinc-800">
+        <div id="modal-visitor" class="hidden w-full max-w-2xl bg-navy-900 border border-white/10 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl relative max-h-[90vh] overflow-y-auto grad-line-top">
+            <button onclick="closeModal()" class="absolute top-4 right-4 p-2 text-stone-400 hover:text-white rounded-lg bg-navy-950 border border-white/10">
                 <i class="fa-solid fa-xmark text-base"></i>
             </button>
             <div class="space-y-2">
                 <span class="text-xs font-mono text-sky-400 uppercase">// Project Architecture</span>
-                <h3 class="text-2xl font-bold text-white">Visitor Management System (VMS)</h3>
+                <h3 class="font-display text-2xl font-bold text-white">Visitor Management System (VMS)</h3>
             </div>
-            <div class="space-y-4 text-xs text-zinc-300 leading-relaxed">
+            <div class="space-y-4 text-xs text-stone-300 leading-relaxed">
                 <p>Digital visitor check-in and security logging system for offices and institutions, replacing paper logbooks with real-time access monitoring.</p>
-                <div class="p-4 rounded-xl bg-zinc-950 border border-zinc-800 space-y-2">
+                <div class="p-4 rounded-xl bg-navy-950 border border-white/10 space-y-2">
                     <h4 class="font-bold text-white font-mono text-xs">Core Highlights:</h4>
-                    <ul class="list-disc pl-4 space-y-1 text-zinc-400">
+                    <ul class="list-disc pl-4 space-y-1 text-stone-400">
                         <li>Fast digital check-in/out interface with ID card verification.</li>
                         <li>Real-time active visitor monitoring dashboard.</li>
                         <li>Automated Excel/PDF security report generation.</li>
                     </ul>
                 </div>
             </div>
-            <div class="pt-4 border-t border-zinc-800 flex justify-end space-x-3">
-                <button onclick="closeModal()" class="px-4 py-2 rounded-xl bg-zinc-800 text-zinc-300 text-xs font-medium">Close</button>
-                <a href="https://github.com/XWAYLAND" target="_blank" class="px-4 py-2 rounded-xl bg-sky-600 text-white text-xs font-semibold">GitHub Repo</a>
+            <div class="pt-4 border-t border-white/5 flex justify-end space-x-3">
+                <button onclick="closeModal()" class="px-4 py-2 rounded-full bg-navy-950 border border-white/10 text-stone-300 text-xs font-medium">Close</button>
+                <a href="https://github.com/XWAYLAND" target="_blank" class="px-4 py-2 rounded-full bg-sky-600 text-white text-xs font-semibold">GitHub Repo</a>
             </div>
         </div>
 
         <!-- E-Library Loaning System Modal -->
-        <div id="modal-elibrary" class="hidden w-full max-w-2xl bg-zinc-900 border border-zinc-800 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
-            <button onclick="closeModal()" class="absolute top-4 right-4 p-2 text-zinc-400 hover:text-white rounded-lg bg-zinc-800">
+        <div id="modal-elibrary" class="hidden w-full max-w-2xl bg-navy-900 border border-white/10 rounded-3xl p-6 sm:p-8 space-y-6 shadow-2xl relative max-h-[90vh] overflow-y-auto grad-line-top">
+            <button onclick="closeModal()" class="absolute top-4 right-4 p-2 text-stone-400 hover:text-white rounded-lg bg-navy-950 border border-white/10">
                 <i class="fa-solid fa-xmark text-base"></i>
             </button>
             <div class="space-y-2">
-                <span class="text-xs font-mono text-purple-400 uppercase">// Collaboration Project</span>
-                <h3 class="text-2xl font-bold text-white">E-Library Loaning System</h3>
+                <span class="text-xs font-mono text-violet-400 uppercase">// Collaboration Project</span>
+                <h3 class="font-display text-2xl font-bold text-white">E-Library Loaning System</h3>
             </div>
-            <div class="space-y-4 text-xs text-zinc-300 leading-relaxed">
+            <div class="space-y-4 text-xs text-stone-300 leading-relaxed">
                 <p>Collaborative multi-platform library management system utilizing a Laravel 12 REST API backend synced seamlessly with a Flutter mobile client application.</p>
-                <div class="p-4 rounded-xl bg-zinc-950 border border-zinc-800 space-y-2">
+                <div class="p-4 rounded-xl bg-navy-950 border border-white/10 space-y-2">
                     <h4 class="font-bold text-white font-mono text-xs">Core Highlights:</h4>
-                    <ul class="list-disc pl-4 space-y-1 text-zinc-400">
+                    <ul class="list-disc pl-4 space-y-1 text-stone-400">
                         <li>Laravel 12 RESTful API with token-based authentication (Sanctum).</li>
                         <li>Automated book loan period tracking and fine calculation logic.</li>
                         <li>Mobile client integration built with Flutter for student book borrowing.</li>
                     </ul>
                 </div>
             </div>
-            <div class="pt-4 border-t border-zinc-800 flex justify-end space-x-3">
-                <button onclick="closeModal()" class="px-4 py-2 rounded-xl bg-zinc-800 text-zinc-300 text-xs font-medium">Close</button>
-                <a href="https://github.com/XWAYLAND" target="_blank" class="px-4 py-2 rounded-xl bg-purple-600 text-white text-xs font-semibold">GitHub Repo</a>
+            <div class="pt-4 border-t border-white/5 flex justify-end space-x-3">
+                <button onclick="closeModal()" class="px-4 py-2 rounded-full bg-navy-950 border border-white/10 text-stone-300 text-xs font-medium">Close</button>
+                <a href="https://github.com/XWAYLAND" target="_blank" class="px-4 py-2 rounded-full bg-violet-600 text-white text-xs font-semibold">GitHub Repo</a>
             </div>
         </div>
 
@@ -833,11 +881,13 @@
         const menuIcon = document.getElementById('menu-icon');
         const mobileNavLinks = document.querySelectorAll('.mobile-nav-link');
 
+        function toggleMobileMenu() {
+            mobileMenu.classList.toggle('hidden');
+            menuIcon.className = mobileMenu.classList.contains('hidden') ? 'fa-solid fa-bars text-lg' : 'fa-solid fa-xmark text-lg';
+        }
+
         if (mobileBtn) {
-            mobileBtn.addEventListener('click', () => {
-                mobileMenu.classList.toggle('hidden');
-                menuIcon.className = mobileMenu.classList.contains('hidden') ? 'fa-solid fa-bars text-lg' : 'fa-solid fa-xmark text-lg';
-            });
+            mobileBtn.addEventListener('click', toggleMobileMenu);
         }
 
         mobileNavLinks.forEach(link => {
@@ -860,8 +910,8 @@
         function showToast(message) {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
-            toast.className = 'px-4 py-3 rounded-xl bg-zinc-900 border border-indigo-500/50 text-white text-xs font-medium shadow-xl flex items-center space-x-2 pointer-events-auto transform transition-all duration-300 translate-y-2 opacity-0';
-            toast.innerHTML = `<i class="fa-solid fa-circle-check text-indigo-400"></i> <span>${message}</span>`;
+            toast.className = 'px-4 py-3 rounded-xl bg-navy-900 border border-indigo-600/60 text-white text-xs font-medium shadow-xl flex items-center space-x-2 pointer-events-auto transform transition-all duration-300 translate-y-2 opacity-0';
+            toast.innerHTML = `<i class="fa-solid fa-circle-check text-sky-400"></i> <span>${message}</span>`;
             container.appendChild(toast);
 
             setTimeout(() => toast.classList.remove('translate-y-2', 'opacity-0'), 10);
